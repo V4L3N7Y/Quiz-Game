@@ -27,3 +27,61 @@
     padding: 1.5rem;
     width: 100%;
 }
+
+.correct{
+    background-color: #28a745;
+}
+
+.incorrect{
+    background-color: #dc3545;
+}
+
+/* HUD */
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hud-prefix {
+    text-align: center;
+    font-size: 2rem;
+}
+
+.hud-main-text {
+    text-align: center;
+}
+
+#progressBar {
+    width: 20rem;
+    height: 4rem;
+    margin-top: 10px;
+    border: 0.3rem solid #56a5eb;   
+}
+
+#progressBarFull {
+    height: 100%;
+    background-color: #56a5eb;
+    width: 0%;
+}
+
+/* LOADER */
+/* https://www.freecodecamp.org/news/how-to-create-a-css-only-loader/ */
+
+#loader {
+    border: 1.6rem solid rgb(255, 255, 255);
+    border-radius:50%;
+    border-top: 1.6rem solid #56a5eb;
+    width: 12rem;
+    height: 12rem;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);   
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

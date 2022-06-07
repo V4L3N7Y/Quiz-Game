@@ -1,5 +1,8 @@
 const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
+const progressBarFull = document.getElementById("progressBarFull");
+const progressText = document.getElementById("progressText");
+const scoreText = document.getElementById("score");
 
 let currentQuestion = {};
 let acceptingAnswers = true;
@@ -8,49 +11,41 @@ let questionCounter = 0;
 let availableQuestions = [];
 
 ///finally reparat o eroare de la o simpla virgula 
-let questions = [
+/// poti adauga intrebari daca vrei, dar trebuie sa actualizezi numarul de intrebari din variabila "MAX_QUESTIONS"
+let questions = [];
 
-    {
-        question: "Inside which HTML elemrnt do we put the JavaScript?",
-        choice1: "<script>",
-        choice2: "<javascript>",
-        choice3: "<js>",
-        choice4: "<scripting>",
-        answer: 1
-    },
+//fetch()
 
-    {
-        question: "AAAAAAAAAAAAA",
-        choice1: "asasasa",
-        choice2: "ssss",
-        choice3: "dddd",
-        choice4: "fewef",
-        answer: 1
-    },
+fetch("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple")
+  .then(res => {
+    return res.json();
+})
+  .then(loadedQuestions => {
+     // questions = loadedQuestions;
+      console.log(loadedQuestions.results);
+      questions = loadedQuestions.results.map( loadedQuestion => {
+          const formattedQuestion = {
+              question: loadedQuestion.question 
+          };
+          const answerChoices  = [ ... loadedQuestion.incorrect_answers]; //raspunsurile incorecte de la opentdb api//
+          formattedQuestion.answer = Math.floor(Math.random() * 3) + 1;
+          answerChoices.splice(formattedQuestion.answer - 1, 0, loadedQuestion.correct_answer);
 
-    {
-        question:
-            "What is the correct syntax for referring to an external script called 'xxx.js'?",
-        choice1: "<script href='xxx.js'>",
-        choice2: "<script src='xxx.js'>",
-        choice3: "<script file='xxx.js'>",
-        choice4: "<script scr='xxx.js'>",
-        answer: 2
-    },
+          answerChoices.forEach((choice, index) => {
+              formattedQuestion["choice" + (index + 1)] = choice;
+          });
+          return formattedQuestion;
+      });
+     startGame(); 
+  })
+  .catch(err => {
+      console.error(err);
+  }); 
+  
 
-    {
-        question: "How do you write 'Hello World' in an alert box?",
-        choice1: "msgBox(Hello World);",
-        choice2: "alertBox(Hello World);",
-        choice3: "msg(Hello World);",
-        choice4: "alert(Hello World);",
-        answer: 4
-    },
-    
-];
 
-const CORECT_BONUS = 10;
-const MAX_QUESTIONS = 3;
+const CORECT_BONUS = 10;  // puncte pentru fiecare raspuns corect;
+const MAX_QUESTIONS = 10; // numarul de intrebari inauntrul array-ului "questions"
 
 startGame = () => {
     questionCounter = 0;
@@ -58,21 +53,30 @@ startGame = () => {
     availableQuestions = [...questions];
     // console.log(availableQuestions);
     getNewQuestion();
+    game.classList.remove("hidden");
+    loader.classList.add("hidden");
 };
 
 getNewQuestion = () => {
   if (availableQuestions.length == 0 || questionCounter > MAX_QUESTIONS){
-      //go to the end page
-      //return window.location.assign('./end.html');
-     console.log("e gata nu mai e!");
+      localStorage.setItem('mostRecentScore', score);
+//se duce la pagina end.html 
+    return window.location.assign('./end.html');
+    //console.log("e gata nu mai e!");
   }
 
     questionCounter++;
+    progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
+      //Update progress bar
+      //console.log(`${(questionCounter / MAX_QUESTIONS) * 100}%`);
+    progressBarFull.style.width = `${(questionCounter / MAX_QUESTIONS) * 100}%`;
+
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
     question.innerText = currentQuestion.question;
 
     //imi arata undefined la text din paragrafe
+    //update## fixed the undefined - am adaugat o atributa "number" in game.html care sa reprezinte nr paragrafului pentru functia"dataset"  
     console.log({choices});
     choices.forEach(choice => {
         const number = choice.dataset["number"];
@@ -80,17 +84,7 @@ getNewQuestion = () => {
         console.log({choice})
     });
 
-   /* let numberOfParagraph = 1;
-    choices.forEach((choice) => {
-        console.log(choice)
-        var paragraph = document.getElementsByTagName("p")[numberOfParagraph];
-        var idOfParagraph = paragraph.id;
-        choice.innerText = currentQuestion[idOfParagraph];
-        numberOfParagraph = numberOfParagraph + 2;
-    });*/
-
     availableQuestions.splice(questionIndex, 1);
-
     acceptingAnswers = true;
 };
 
@@ -101,10 +95,33 @@ choices.forEach(choice => {
         acceptingAnswers = false;
         const selectedChoice = e.target;
         const selectedAnswer = selectedChoice.dataset["number"];
-        // console.log(choice);
-        getNewQuestion();
+        
+        const classToApply = selectedAnswer == currentQuestion.answer ?  "correct" : "incorrect";
+        if (classToApply === "correct") {
+            incrementScore(CORECT_BONUS);
+            const audio = new Audio("/audio/correct.mp3"); ///am adaugat un sunet si se activeaza atunci cand raspunzi corect la o intrebare
+            audio.play();
+        } else {
+            const audio = new Audio("/audio/incorrect.mp3"); ///am adaugat un sunet si se activeaza atunci cand raspunzi incorect la o intrebare
+            audio.play();
+        }
+
+        //culoarea verde pentru raspuns corect
+            selectedChoice.parentElement.classList.add(classToApply);
+        
+        
+        ///timp limita 1.5s pentru event; 
+        setTimeout(() => {
+            //culoarea rosu pentru raspuns incorect
+            selectedChoice.parentElement.classList.remove(classToApply);
+            getNewQuestion();
+
+        },1500);        
        
     });
 });
 
-startGame(); 
+incrementScore = num => {
+    score += num;
+    scoreText.innerText = score;
+}
