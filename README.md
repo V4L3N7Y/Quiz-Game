@@ -6,3 +6,6 @@ https://opentdb.com/api_config.php
 
 then change the link on the fetch() function from the game.js file
 
+
+https://vali-quiz.netlify.app  - quiz game site
+
