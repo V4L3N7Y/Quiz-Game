@@ -21,8 +21,8 @@ fetch("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=mu
     return res.json();
 })
   .then(loadedQuestions => {
+    
      // questions = loadedQuestions;
-      console.log(loadedQuestions.results);
       questions = loadedQuestions.results.map( loadedQuestion => {
           const formattedQuestion = {
               question: loadedQuestion.question 
@@ -31,6 +31,7 @@ fetch("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=mu
           formattedQuestion.answer = Math.floor(Math.random() * 3) + 1;
           answerChoices.splice(formattedQuestion.answer - 1, 0, loadedQuestion.correct_answer);
 
+        
           answerChoices.forEach((choice, index) => {
               formattedQuestion["choice" + (index + 1)] = choice;
           });
@@ -75,9 +76,19 @@ getNewQuestion = () => {
     currentQuestion = availableQuestions[questionIndex];
     question.innerText = currentQuestion.question;
 
+    const htmlEntities = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&apos;"
+      };
+    
+     console.log(currentQuestion.question.replace(/([&<>\"'])/g, match => htmlEntities[match]));
+
     //imi arata undefined la text din paragrafe
     //update## fixed the undefined - am adaugat o atributa "number" in game.html care sa reprezinte nr paragrafului pentru functia"dataset"  
-    console.log({choices});
+    
     choices.forEach(choice => {
         const number = choice.dataset["number"];
         choice.innerText = currentQuestion["choice" + number];
