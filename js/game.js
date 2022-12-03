@@ -11,10 +11,10 @@ let questionCounter = 0;
 let availableQuestions = [];
 
 ///finally reparat o eroare de la o simpla virgula 
-/// poti adauga intrebari daca vrei, dar trebuie sa actualizezi numarul de intrebari din variabila "MAX_QUESTIONS"
+///poti adauga intrebari daca vrei, dar trebuie sa actualizezi numarul de intrebari din variabila "MAX_QUESTIONS"
 let questions = [];
 
-//fetch()
+///fetch()
 
 fetch("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple")
   .then(res => {
@@ -30,19 +30,20 @@ fetch("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=mu
           const answerChoices  = [ ... loadedQuestion.incorrect_answers]; //raspunsurile incorecte de la opentdb api//
           formattedQuestion.answer = Math.floor(Math.random() * 3) + 1;
           answerChoices.splice(formattedQuestion.answer - 1, 0, loadedQuestion.correct_answer);
-
         
           answerChoices.forEach((choice, index) => {
               formattedQuestion["choice" + (index + 1)] = choice;
           });
           return formattedQuestion;
       });
+      
      startGame(); 
   })
   .catch(err => {
       console.error(err);
   }); 
-  
+
+
 
 
 const CORECT_BONUS = 10;  // puncte pentru fiecare raspuns corect;
@@ -56,6 +57,7 @@ startGame = () => {
     getNewQuestion();
     game.classList.remove("hidden");
     loader.classList.add("hidden");
+
 };
 
 getNewQuestion = () => {
@@ -69,23 +71,28 @@ getNewQuestion = () => {
     questionCounter++;
     progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
       //Update progress bar
-      //console.log(`${(questionCounter / MAX_QUESTIONS) * 100}%`);
     progressBarFull.style.width = `${(questionCounter / MAX_QUESTIONS) * 100}%`;
 
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
     question.innerText = currentQuestion.question;
+    console.log(unescape(currentQuestion.question))
 
-    const htmlEntities = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&apos;"
-      };
+    function convertHTML(str) {
+         const entities = innerHTML.value;
+        let arr = str.split("").map(function (elem){
+            if (entities.hasOwnProperty(elem)){
+                return entities[elem];
+            }else{
+                return elem;
+            }
+        });
+        return arr.join("");
+      }
     
-     console.log(currentQuestion.question.replace(/([&<>\"'])/g, match => htmlEntities[match]));
-
+      console.log(unescape(currentQuestion.question))
+ 
+    
     //imi arata undefined la text din paragrafe
     //update## fixed the undefined - am adaugat o atributa "number" in game.html care sa reprezinte nr paragrafului pentru functia"dataset"  
     
@@ -131,6 +138,7 @@ choices.forEach(choice => {
        
     });
 });
+
 
 incrementScore = num => {
     score += num;

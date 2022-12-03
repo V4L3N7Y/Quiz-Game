@@ -8,7 +8,7 @@
 }
 
 :root {
-    background-color: rgb(160, 255, 250);
+    background-color: rgb(255, 160, 160);
     font-size: 62.5%;
 }
 
@@ -50,6 +50,10 @@ h3 {
     max-width: 80rem;
     margin: 0 auto;
     padding: 2rem;
+}
+
+.container-home {
+    height: 65vh; 
 }
 
 .container > * {

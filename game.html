@@ -6,14 +6,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href='style/app_style.css' />
         <link rel="stylesheet" type="text/css" href='style/game_style.css' />
+        <link rel="stylesheet" type="text/css" href='style/clock_style.css' />
+        <link rel="stylesheet" type="text/css" href='style/canvas_style.css' />
+        <link href='https://fonts.googleapis.com/css?family=Mountains of Christmas' rel='stylesheet'>
         <title>Quiz Game</title>
     </head>
     <body>
+     
         <div class="container">
            <div id="loader"></div> 
             <div id="game" class="justify-content flex-column hidden">
                 <div id="hud">
-                    <div id="hud-item">
+                    <div id="hud-item">                
                         <p id="progressText" class="hud-prefix">
                             Question
                         </p>
@@ -51,6 +55,10 @@
 
             </div>
         </div>
+        <canvas></canvas>
         <script src="js/game.js"></script>
+        <script src="js/clock.js"></script>
+        <script src="js/snow_code.js"></script> 
+        
     </body>
 </html>
