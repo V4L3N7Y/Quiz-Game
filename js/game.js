@@ -16,7 +16,7 @@ let questions = [];
 
 ///fetch()
 
-fetch("https://opentdb.com/api.php?amount=10&category=15&difficulty=easy&type=multiple")
+fetch("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple&encode=base64")
   .then(res => {
     return res.json();
 })
@@ -63,47 +63,41 @@ startGame = () => {
 getNewQuestion = () => {
   if (availableQuestions.length == 0 || questionCounter > MAX_QUESTIONS){
       localStorage.setItem('mostRecentScore', score);
-//se duce la pagina end.html 
+    //se duce la pagina end.html 
     return window.location.assign('./end.html');
     //console.log("e gata nu mai e!");
   }
-
+    /////progress bar
     questionCounter++;
     progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
-      //Update progress bar
+    //Update progress bar
     progressBarFull.style.width = `${(questionCounter / MAX_QUESTIONS) * 100}%`;
 
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
-    question.innerText = currentQuestion.question;
-    console.log(unescape(currentQuestion.question))
-
-    function convertHTML(str) {
-         const entities = innerHTML.value;
-        let arr = str.split("").map(function (elem){
-            if (entities.hasOwnProperty(elem)){
-                return entities[elem];
-            }else{
-                return elem;
-            }
-        });
-        return arr.join("");
-      }
+    question.innerText = atob(currentQuestion.question); //fixed decoding the question text using atob() function
     
-      console.log(unescape(currentQuestion.question))
- 
+
+ ///////////////////////////////////////////////////////////////////
+ const encodedText = currentQuestion.question;
+
+ const decodedText = atob(encodedText);
+
+ console.log(decodedText); // prints current question
+
+ /////////////////////////////////////////////////////////////////////// 
     
     //imi arata undefined la text din paragrafe
-    //update## fixed the undefined - am adaugat o atributa "number" in game.html care sa reprezinte nr paragrafului pentru functia"dataset"  
+    //update## fixed the undefined - am adaugat o atributa "number" in game.html care sa reprezinte nr paragrafului pentru proprietatea"dataset"  
     
     choices.forEach(choice => {
         const number = choice.dataset["number"];
-        choice.innerText = currentQuestion["choice" + number];
-        console.log({choice})
+        choice.innerText = atob(currentQuestion["choice" + number]); //fixed decoding the choices using atob() function
     });
 
     availableQuestions.splice(questionIndex, 1);
     acceptingAnswers = true;
+    console.log(availableQuestions);
 };
 
 choices.forEach(choice => {
