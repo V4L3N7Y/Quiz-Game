@@ -8,7 +8,7 @@
 }
 
 :root {
-    background-color: rgb(255, 160, 160);
+    background-color: rgb(73, 252, 255);
     font-size: 62.5%;
 }
 
@@ -19,7 +19,7 @@ h1,h2,h3,h4 {
 
 h1 {
     font-size: 5.4rem;
-    color: #56a5eb;
+    color: #0088ff;
     margin-bottom: 5rem;
 }
 
@@ -47,7 +47,7 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 80rem;
+    max-width: 100rem;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -90,7 +90,7 @@ h3 {
     border: 0.1rem solid #56a5eb;
     margin-bottom: 1rem;
     text-decoration: none;
-    color: #56a5eb;
+    color: #5e9ed5;
     background-color: whitesmoke;
 }
 
