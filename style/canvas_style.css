@@ -1,9 +1,0 @@
-canvas {
-    height: 100%;
-    left: 0;
-    z-index:-1;     /* <-- the shit right there ...took me 3 hours to fix a "can't press the butons"...no kidding*/
-    position: fixed;
-    top: 0;
-
-    width: 100%;
-  }

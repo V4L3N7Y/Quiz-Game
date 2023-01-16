@@ -34,7 +34,6 @@
         "choice3": "msg(Hello World);",
         "choice4": "alert(Hello World);",
         "answer": 4
-    }
-    
+    }   
     
 ]
