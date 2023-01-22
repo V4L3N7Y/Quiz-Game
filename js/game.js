@@ -27,6 +27,7 @@ fetch("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=mul
           const formattedQuestion = {
               question: loadedQuestion.question 
           };
+          console.log(atob(formattedQuestion.question));
           const answerChoices  = [ ... loadedQuestion.incorrect_answers]; //raspunsurile incorecte de la opentdb api//
           formattedQuestion.answer = Math.floor(Math.random() * 3) + 1;
           answerChoices.splice(formattedQuestion.answer - 1, 0, loadedQuestion.correct_answer);
@@ -76,7 +77,12 @@ getNewQuestion = () => {
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
     question.innerText = atob(currentQuestion.question); //fixed decoding the question text using atob() function
-    
+    ///new implement/// translated the curent question using an api that translate the text
+    let apiUrl = `https://api.mymemory.translated.net/get?q=${question.innerText}&langpair=en-GB|ro-RO`;
+        fetch(apiUrl).then(res => res.json()).then(data => {        
+        question.innerText = data.responseData.translatedText
+        console.log(question.innerText)
+    })
 
  ///////////////////////////////////////////////////////////////////
  const encodedText = currentQuestion.question;
@@ -92,7 +98,13 @@ getNewQuestion = () => {
     
     choices.forEach(choice => {
         const number = choice.dataset["number"];
-        choice.innerText = atob(currentQuestion["choice" + number]); //fixed decoding the choices using atob() function
+        choice.innerText = atob(currentQuestion["choice" + number]);
+         //fixed decoding the choices using atob() function
+         let apiUrl = `https://api.mymemory.translated.net/get?q=${choice.innerText}&langpair=en-GB|ro-RO`;
+         fetch(apiUrl).then(res => res.json()).then(data => {        
+         choice.innerText = data.responseData.translatedText
+         console.log(question.innerText)
+     })
     });
 
     availableQuestions.splice(questionIndex, 1);
@@ -127,9 +139,7 @@ choices.forEach(choice => {
             //culoarea rosu pentru raspuns incorect
             selectedChoice.parentElement.classList.remove(classToApply);
             getNewQuestion();
-
-        },1500);        
-       
+        },1500);              
     });
 });
 
